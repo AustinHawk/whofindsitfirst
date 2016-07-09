@@ -97,6 +97,7 @@ function(accessToken, refreshToken, profile, done) {
     email:" ",
     password:" ",
     soundcloudId: profile.id,
+    scToken: accessToken
   }, function(err, user){
     if(err){
       console.log(err);

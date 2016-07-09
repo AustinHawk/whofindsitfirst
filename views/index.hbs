@@ -4,3 +4,22 @@
 <div class="panel panel-default col-md-4" id="panel">
 <h3> HOME PAGE </h3>
 </div>
+
+<script>
+$(document).ready(function(){
+	setInterval($.ajax({
+		url: '/fetchData', 
+		method: "GET",
+		success: function(data){
+			console.log("SUCCESSFUL" + data);
+			console.log(data);
+			// res.send(data);
+			// res.redirect('/login');
+		},
+		error: function(err){
+			console.log("NOT SUCCESSFUL" + err)
+			res.redirect('/login');
+		}
+	}), 1000);
+})
+</script>
