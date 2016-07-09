@@ -5,14 +5,17 @@ var contact = models.Contact;
 var message = models.Message;
 
 
+// router.get('/', function(req, res, next){
+// 	if (req.user) {
+// 		res.redirect('/index');
+// 	}
+// 	else {
+// 		res.redirect('/login');
+// 	}
+// });
+
 router.get('/', function(req, res, next){
-	console.log("TESTINGs");
-	if (req.user) {
-		res.redirect('/contacts');
-	}
-	else {
-		res.redirect('/login');
-	}
+	res.redirect('/index');	
 });
 
 router.get('/signup', function(req, res, next){
@@ -39,7 +42,7 @@ router.post('/signup', function(req, res, next){
 				console.log(err);
 			}
 			else {
-				console.log(success);
+				console.log("CREATED NEW USER SUCCESSFULLY ON SIGNUP" + success);
 				res.redirect('/login');
 			}
 		})
@@ -70,20 +73,23 @@ module.exports = function(passport) {
 	    // DO SHIT HERE
 	  });
 
+	router.get('/auth/soundcloud',
+	  passport.authenticate('soundcloud'));
 
-	router.post('/login', passport.authenticate('local'), function(req, res){
-		res.redirect('/contacts');
-	});
+	router.get('/auth/soundcloud/callback', 
+	  passport.authenticate('soundcloud', { failureRedirect: '/login' }),
+	  function(req, res) {
+	    // Successful authentication, redirect home.
+	    res.redirect('/');
+	    // DO SHIT HERE
+	  });
 
-	router.use(function(req, res, next){
-		if(!req.user){
-			res.redirect('/login');
-		}
-		else{
-			next();
-		}
 
-	})
+	// router.post('/login', passport.authenticate('local'), function(req, res){
+	// 	res.send("POSTED TO LOGIN !!!");
+	// 	console.log("POSTED TO LOGIN");
+	// 	res.redirect('/index');
+	// });
 
 	router.get('/logout', function(req, res, next){
 		req.logout();

@@ -20,6 +20,9 @@ var UserSchema = new mongoose.Schema({
 		},
 		fId: {
 			type: String
+		},
+		soundcloudId: {
+			type: String
 		}
 	});
 
@@ -41,37 +44,7 @@ var models = {
 		}
 	}),
 
-	User: mongoose.model('User', UserSchema),
-
-	Message: mongoose.model('Message', {
-		created: {
-			type: Date,
-			required: true
-		},
-		content: {
-			type: String,
-			required: true
-		},
-		user: {
-			type: String,
-			required: true
-		},
-		contact: {
-			type: String,
-			required: true
-		},
-		status: {
-			type: String,
-			required: true
-		},
-		from: {
-			type: String,
-			required: true
-		},
-		timeToSend: {
-			type: Date
-		}
-	})
+	User: mongoose.model('User', UserSchema)
 };
 
 module.exports = models;
