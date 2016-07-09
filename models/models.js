@@ -10,7 +10,11 @@ var connect = process.env.MONGODB_URI || require('./connect');
 mongoose.connect(connect);
 
 var UserSchema = new mongoose.Schema({
+<<<<<<< HEAD
+		username: {
+=======
 		email: {
+>>>>>>> spark
 			type: String,
 			required: true
 		},
@@ -20,6 +24,13 @@ var UserSchema = new mongoose.Schema({
 		},
 		fId: {
 			type: String
+<<<<<<< HEAD
+		},
+		phone: {
+			type: String,
+			required: true
+=======
+>>>>>>> spark
 		}
 	});
 
@@ -27,7 +38,11 @@ UserSchema.plugin(findOrCreate);
 // Create all of your models/schemas here, as properties.
 var models = {
 	Contact: mongoose.model('Contact', {
+<<<<<<< HEAD
+		name: {
+=======
 		email: {
+>>>>>>> spark
 			type: String,
 			required: true
 		},
