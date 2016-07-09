@@ -8,7 +8,7 @@ var message = models.Message;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.redirect('/contacts');
+	res.redirect('/index');
 });
 
 

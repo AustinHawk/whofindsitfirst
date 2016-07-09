@@ -8,7 +8,7 @@ var message = models.Message;
 router.get('/', function(req, res, next){
 	console.log("TESTINGs");
 	if (req.user) {
-		res.redirect('/contacts');
+		res.redirect('/index');
 	}
 	else {
 		res.redirect('/login');
