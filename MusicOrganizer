@@ -37,7 +37,7 @@ MusicOrganizer.prototype.getOrderedSongs = function() {
 	});
 
 	this.orderedSongs = intermediaryArray;
-
+	return this.orderedSongs;
 };
 
 MusicOrganizer.prototype.getSongs = function() {
@@ -67,5 +67,20 @@ MusicOrganizer.prototype.getPercentIncreaseOfSong = function(song) {
 
 	throw new Error("Didn't find the song you searched for...");
 };
+
+MusicOrganizer.prototype.averageIncrease = function() {
+	//IMPLEMENT
+	if (this.unorderedSongs.length === 0) {
+		throw new Error('No songs stored...');
+	}
+
+	var currentTotal = 0;
+	for (var i = 0; i < this.unorderedSongs.length; i++) {
+		currentTotal += this.unorderedSongs[i].percentIncrease;
+	}
+	
+	return currentTotal / this.unorderedSongs.length;
+};
+
 
 module.exports = MusicOrganizer;
