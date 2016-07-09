@@ -8,7 +8,7 @@ var message = models.Message;
 router.get('/', function(req, res, next){
 	console.log("TESTINGs");
 	if (req.user) {
-		res.redirect('/contacts');
+		res.redirect('/index');
 	}
 	else {
 		res.redirect('/login');
@@ -39,7 +39,7 @@ router.post('/signup', function(req, res, next){
 				console.log(err);
 			}
 			else {
-				console.log(success);
+				console.log("CREATED NEW USER SUCCESSFULLY ON SIGNUP" + success);
 				res.redirect('/login');
 			}
 		})
@@ -72,7 +72,9 @@ module.exports = function(passport) {
 
 
 	router.post('/login', passport.authenticate('local'), function(req, res){
-		res.redirect('/contacts');
+		res.send("POSTED TO LOGIN !!!")
+		console.log("POSTED TO LOGIN")
+		res.redirect('/index');
 	});
 
 	router.use(function(req, res, next){

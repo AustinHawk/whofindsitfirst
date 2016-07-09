@@ -48,15 +48,15 @@ passport.deserializeUser(function(id, done) {
 // LocalStrategy defines strategy for which we log ppl in 
 passport.use(new LocalStrategy(function(username, password, done) {
   // Find the user with the given username
-    User.findOne({ username: username }, function (err, user) {
+  console.log("GOT IN");
+  console.log("THIS IS PASSPORT LOCAL STRATEGY USERNAME" + username);
+    User.findOne({ email: username }, function (err, user) {
       // if there's an error, finish trying to authenticate (auth failed)
       if (err) { 
-        console.log(err);
         return done(err);
       }
       // if no user present, auth failed
       if (!user) {
-        console.log(user);
         return done(null, false);
       }
       // if passwords do not match, auth failed
