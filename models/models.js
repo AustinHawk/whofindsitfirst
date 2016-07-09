@@ -23,6 +23,9 @@ var UserSchema = new mongoose.Schema({
 		},
 		soundcloudId: {
 			type: String
+		},
+		scToken: {
+			type: String
 		}
 	});
 
