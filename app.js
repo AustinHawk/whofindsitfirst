@@ -70,16 +70,15 @@ passport.use(new LocalStrategy(function(username, password, done) {
 ));
 
 passport.use(new FacebookStrategy({
-    clientID: "1000108806704564",
-    clientSecret: "d3e5b123927de92debf99a3257e0295f",
+    clientID: "605028946343058",
+    clientSecret: "48efa4bacb1c8986541253a1d9e80c7a",
     callbackURL: "http://localhost:3000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, {
-      username: " ",
+      email: " ",
       password: " ",
       facebookId: profile.id,
-      phone: " "
     }, function (err, user) {
       return cb(err, user);
     });

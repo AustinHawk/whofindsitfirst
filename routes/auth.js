@@ -69,41 +69,6 @@ module.exports = function(passport) {
 	    // DO SHIT HERE
 	  });
 
-	router.post('/messages/receive', function(req, res, next){
-		var number = req.body.From;
-		number = number.substring(2);
-		contact.findOne({phone: number}, function(err, contact){
-			if(err){
-				res.status(500).send("Contact not found");
-			}
-			else{
-				var contacts = contact._id;
-				var created = new Date();
-				var content = req.body.Body;
-				var user = contact.owner;
-				var status = "recieved";
-				var from = number;
-
-				var newMessage = new message({
-					contact: contacts,
-					created: created,
-					content: content,
-					user: user,
-					status: status,
-					from: from
-				})
-
-				newMessage.save(function(err, success){
-					if(err){
-						res.status(400).send(err);
-					} else {
-						res.send(success);
-					}
-				});
-
-			}
-		})
-	})
 
 	router.post('/login', passport.authenticate('local'), function(req, res){
 		res.redirect('/contacts');
