@@ -119,9 +119,9 @@ module.exports = function(passport) {
 
 	})
 
-	// router.get('/logout', function(req, res, next){
-	// 	req.logout();
-	// }); 
+	router.get('/logout', function(req, res, next){
+		req.logout();
+	}); 
 
     return router;
 }
