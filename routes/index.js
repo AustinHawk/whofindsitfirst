@@ -11,5 +11,9 @@ router.get('/', function(req, res, next) {
 	res.redirect('/index');
 });
 
+router.get('/index', function(req,res,next){
+	res.render('index');
+})
+
 
 module.exports = router;
