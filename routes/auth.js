@@ -20,7 +20,7 @@ router.get('/signup', function(req, res, next){
 });
 
 router.post('/signup', function(req, res, next){
-	if (!(req.body.name && req.body.pass && req.body.pass2)){
+	if (!(req.body.email && req.body.pass && req.body.pass2)){
 		throw new Error("input all fields");
 	}
 
@@ -29,7 +29,7 @@ router.post('/signup', function(req, res, next){
 	if (pass === pass2){
 		var newUser = new models.User(
 		{
-			username: req.body.name,
+			email: req.body.email,
 			password: req.body.pass
 		});
 
