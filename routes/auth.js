@@ -20,7 +20,11 @@ router.get('/signup', function(req, res, next){
 });
 
 router.post('/signup', function(req, res, next){
+<<<<<<< HEAD
 	if (!(req.body.name && req.body.pass && req.body.pass2)){
+=======
+	if (!(req.body.email && req.body.pass && req.body.pass2)){
+>>>>>>> spark
 		throw new Error("input all fields");
 	}
 
@@ -29,7 +33,11 @@ router.post('/signup', function(req, res, next){
 	if (pass === pass2){
 		var newUser = new models.User(
 		{
+<<<<<<< HEAD
 			username: req.body.name,
+=======
+			email: req.body.email,
+>>>>>>> spark
 			password: req.body.pass
 		});
 
@@ -69,6 +77,7 @@ module.exports = function(passport) {
 	    // DO SHIT HERE
 	  });
 
+<<<<<<< HEAD
 	router.post('/messages/receive', function(req, res, next){
 		var number = req.body.From;
 		number = number.substring(2);
@@ -104,6 +113,8 @@ module.exports = function(passport) {
 			}
 		})
 	})
+=======
+>>>>>>> spark
 
 	router.post('/login', passport.authenticate('local'), function(req, res){
 		res.redirect('/contacts');
@@ -119,9 +130,15 @@ module.exports = function(passport) {
 
 	})
 
+<<<<<<< HEAD
 	// router.get('/logout', function(req, res, next){
 	// 	req.logout();
 	// }); 
+=======
+	router.get('/logout', function(req, res, next){
+		req.logout();
+	}); 
+>>>>>>> spark
 
     return router;
 }

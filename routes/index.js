@@ -3,12 +3,16 @@ var router = express.Router();
 var models = require('../models/models')
 var contact = models.Contact;
 var message = models.Message;
+<<<<<<< HEAD
 var twilio = require('../twilio');
+=======
+>>>>>>> spark
 
 // var twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+<<<<<<< HEAD
 	res.redirect('/contacts');
 });
 
@@ -452,5 +456,10 @@ router.post('/newMessage/:id', function(req, res, next){
 		}
 	})
 });
+=======
+	res.redirect('/login');
+});
+
+>>>>>>> spark
 
 module.exports = router;
