@@ -7,13 +7,22 @@ var message = models.Message;
 // var twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-	res.redirect('/index');
-});
+
+router.use(function(req, res, next){
+	if(!req.user){
+		res.redirect('/login');		
+	}
+	else{
+		next();
+	}
+})
+
 
 router.get('/index', function(req,res,next){
 	res.render('index');
 })
+
+
 
 
 module.exports = router;

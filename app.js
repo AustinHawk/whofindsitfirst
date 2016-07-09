@@ -14,6 +14,8 @@ var User = models.User;
 
 var FacebookStrategy = require('passport-facebook');
 
+var SoundCloudStrategy = require('passport-soundcloud').Strategy;
+
 var app = express();
 
 // view engine setup
@@ -46,28 +48,28 @@ passport.deserializeUser(function(id, done) {
 
 // Tell passport how to read our user models
 // LocalStrategy defines strategy for which we log ppl in 
-passport.use(new LocalStrategy(function(username, password, done) {
-  // Find the user with the given username
-  console.log("GOT IN");
-  console.log("THIS IS PASSPORT LOCAL STRATEGY USERNAME" + username);
-    User.findOne({ email: username }, function (err, user) {
-      // if there's an error, finish trying to authenticate (auth failed)
-      if (err) { 
-        return done(err);
-      }
-      // if no user present, auth failed
-      if (!user) {
-        return done(null, false);
-      }
-      // if passwords do not match, auth failed
-      if (user.password !== password) {
-        return done(null, false);
-      }
-      // auth has succeeded
-      return done(null, user);
-    });
-  }
-));
+// passport.use(new LocalStrategy(function(username, password, done) {
+//   // Find the user with the given username
+//   console.log("GOT IN");
+//   console.log("THIS IS PASSPORT LOCAL STRATEGY USERNAME" + username);
+//     User.findOne({ email: username }, function (err, user) {
+//       // if there's an error, finish trying to authenticate (auth failed)
+//       if (err) { 
+//         return done(err);
+//       }
+//       // if no user present, auth failed
+//       if (!user) {
+//         return done(null, false);
+//       }
+//       // if passwords do not match, auth failed
+//       if (user.password !== password) {
+//         return done(null, false);
+//       }
+//       // auth has succeeded
+//       return done(null, user);
+//     });
+//   }
+// ));
 
 passport.use(new FacebookStrategy({
     clientID: "605028946343058",
@@ -83,6 +85,28 @@ passport.use(new FacebookStrategy({
       return cb(err, user);
     });
   }
+));
+
+passport.use(new SoundCloudStrategy({
+  clientID: "bfd03479aef078b87807af6b0d9787ee",
+  clientSecret: "93229d86384dc973be18ad7b4fec3ca0",
+  callbackURL: "http://localhost:3000/auth/soundcloud/callback"
+},
+function(accessToken, refreshToken, profile, done) {
+  User.findOrCreate({ soundcloudId: profile.id }, {
+    email:" ",
+    password:" ",
+    soundcloudId: profile.id,
+  }, function(err, user){
+    if(err){
+      console.log(err);
+    }
+    if(user){
+      console.log(user);
+      return done(err, user);
+    }
+  })
+}
 ));
 
 app.use(passport.initialize());
