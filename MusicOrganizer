@@ -67,3 +67,5 @@ MusicOrganizer.prototype.getPercentIncreaseOfSong = function(song) {
 
 	throw new Error("Didn't find the song you searched for...");
 };
+
+module.exports = MusicOrganizer;
