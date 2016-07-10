@@ -1,8 +1,6 @@
 
-
-
 body {
-    background-color: orange; 
+    background-color: orange !important; 
     font-family: Helvetica; 
     color:white; 
     text-align:center; 
@@ -67,8 +65,8 @@ td {
 .backed {
     letter-spacing: .05vw;
     text-indent:.05vw;
-    text-shadow: 0 0 60px #000000;
-}
+/*    text-shadow: 0 0 60px #000000;
+*/}
 
 .content {
     position:absolute;
@@ -122,6 +120,18 @@ li{
     background-size:cover; /* you change this to "contain" if you don't want the images to be cropped */
     color:#fff;
 }
+
+.followButton {
+    margin:10px 0 0 0;
+    color:white;
+   width:250px; 
+   height:30px; 
+   background-color:black; 
+   border-radius:5px; 
+   border:none;
+   font-size: 60%;
+   letter-spacing: 1.5px;
+   }
 
 .imgJanes{
     background-image: url('http://assets.noisey.com/content-images/contentimage/33901/janes-party.jpg');
