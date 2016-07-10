@@ -92,10 +92,11 @@ passport.use(new SoundCloudStrategy({
 },
 function(accessToken, refreshToken, profile, done) {
   console.log("USER PROFILE LOOKS LIKE THIS: ", profile);
+  console.log("img is : ", profile.avatar_url)
   User.findOrCreate({ soundcloudId: profile.id }, {
     soundcloudId: profile.id,
     scToken: accessToken,
-    img: profile.avatar_url
+    img: profile._json.avatar_url
   }, function(err, user){
     if(err){
       console.log(err);
