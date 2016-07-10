@@ -1,12 +1,13 @@
 
-<div class = "row">
+{{!-- <div class = "row">
 <div class = "col-md-4"></div>
 <div class="panel panel-default col-md-4" id="panel">
-<h3> HOME PAGE </h3>
+<h3> HOME PAGE </h3> --}}
 <div id = "output">
-</div>
+{{!-- </div>
 <button id='interval'>click</button>
 <button id='user'>update User</button>
+<button id='filter'>filter by following</button> --}}
 </div>
 
 <script>
@@ -29,6 +30,24 @@
 	// 		// res.redirect('/login');
 	// 	}
 	// })}, 5000);
+	// $('#body').onLoad
+	$.ajax({
+			url: '/userScore', 
+			method: "GET",
+			success: function(data){
+				// console.log("SUCCESSFUL" + data);
+				// console.log(data);
+				$('#output').html(data);
+				// res.send(data);
+				// res.redirect('/login');
+
+				// use .html to funnel in new likes here
+			},
+			error: function(err){
+				console.log("NOT SUCCESSFUL" + err)
+				// res.redirect('/login');
+			}
+	})
 
 	$("#interval").click(function(){
 		$.ajax({
@@ -50,7 +69,7 @@
 		})
 	})
 
-	$("#user").click(function(){
+	 setInterval(function() {
 		$.ajax({
 			url: '/userScore', 
 			method: "GET",
@@ -70,6 +89,27 @@
 				// res.redirect('/login');
 			}
 		})
+	}, 500000);
+
+	$("#filter").click(function(){
+		$.ajax({
+			url: '/filteredUserScore', 
+			method: "GET",
+			success: function(data){
+				// console.log("SUCCESSFUL" + data);
+				// console.log(data);
+				$('#output').html(data);
+				// res.send(data);
+				// res.redirect('/login');
+
+				// use .html to funnel in new likes here
+			},
+			error: function(err){
+				console.log("NOT SUCCESSFUL" + err)
+				// res.redirect('/login');
+			}
+		})
 	})
 })
+
 </script>

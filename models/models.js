@@ -27,6 +27,9 @@ var UserSchema = new mongoose.Schema({
 	},
 	img: {
 		type: String
+	},
+	userName: {
+		type: String
 	}
 });
 
@@ -108,6 +111,10 @@ UserSchema.methods.assignFavorites = function(newSongId, callback){
 				}
 			})
 		}
+		else{
+			// put in callback (this way length will go to 0 in prev function)
+			callback(err, favorite);
+		}
 		if(err){
 			console.log("error finding favorite");
 			console.log(err);
@@ -117,6 +124,7 @@ UserSchema.methods.assignFavorites = function(newSongId, callback){
 
 UserSchema.methods.getScore = function(callback){
 	var totalPercentage = 0;
+<<<<<<< HEAD
 	// var denominator = 0;
 
 	var that = this;
@@ -150,6 +158,58 @@ UserSchema.methods.getScore = function(callback){
 						that.save(function(err, user) {
 							return callback(null, user);
 						})
+=======
+	var denominator = 0;
+	var that = this;
+	console.log("THIS IS THE USER WOOOOO", this);
+	Favorites.find({userId: this._id})
+	.populate('songId')
+	.exec(function(err, favorites){
+		console.log("ERR IS : ", err, "FAVES IS", favorites)
+		if(favorites && favorites.length > 0){
+			var length = favorites.length;
+			var cb = function(){
+				length --;
+				if (length === 0){
+					console.log("COMPLETED USER SCORING, SCORE IS " + (totalPercentage/denominator));
+					that.score = totalPercentage/denominator;
+					that.save(function(err, succ){
+						if(err){
+							console.log(err);
+						}
+						if(succ){
+							console.log(succ);
+							callback(succ);
+						}
+					})
+				}
+			};
+
+			favorites.forEach(function(favorite){
+				var initialLikes = favorite.songId.initialLikes;
+				var currentlikes;
+				SC.init({
+				  id: 'bfd03479aef078b87807af6b0d9787ee',
+				  secret: '93229d86384dc973be18ad7b4fec3ca0',
+				  uri: 'http://localhost:3000/auth/soundcloud/callback',
+				  accessToken: that.scToken
+				});
+
+				var trackId = favorite.songId;
+				var url = '/tracks/' + trackId.songId;
+				SC.get(url, function(err, track) {
+					if(track){
+						currentlikes = track.favoritings_count;
+						var songScore = (currentlikes - initialLikes)/initialLikes;
+						totalPercentage += songScore;
+						denominator ++;
+						console.log("total percent is: " + totalPercentage);
+						console.log("denom is : " + denominator);
+						cb();
+					}
+					if (err){
+						console.log(err);
+>>>>>>> master
 					}
 
 				})
