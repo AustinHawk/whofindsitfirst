@@ -65,8 +65,8 @@ td {
 .backed {
     letter-spacing: .05vw;
     text-indent:.05vw;
-/*    text-shadow: 0 0 60px #000000;
-*/}
+    text-shadow: 0 0 80px #000000;
+}
 
 .content {
     position:absolute;
