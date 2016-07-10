@@ -9,45 +9,82 @@ var connect = process.env.MONGODB_URI || require('./connect');
 // your connect string is not defined or incorrect.
 mongoose.connect(connect);
 
+
+
 var UserSchema = new mongoose.Schema({
-		email: {
-			type: String,
-			required: true
-		},
-		password: {
-			type: String,
-			required: true
-		},
-		fId: {
-			type: String
-		},
-		soundcloudId: {
-			type: String
-		},
-		scToken: {
-			type: String
-		}
+	fId: {
+		type: String
+	},
+	soundcloudId: {
+		type: String
+	},
+	scToken: {
+		type: String
+	}
+});
+
+
+var SongSchema = new mongoose.Schema({
+	songId: {
+		type: String,
+		required: true
+	},
+	initialLikes: {
+		type: Number,
+		required: true
+	}
+});
+
+
+var FavoritesSchema = new mongoose.Schema({
+	userId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+		required: true
+	},
+	songId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Song',
+		required: true
+	}
+});
+
+var Favorites = mongoose.model('Favorites', FavoritesSchema);
+
+UserSchema.methods.assignFavorites = function(newSongId, callback){
+	var newFavorite = new Favorites ({
+		userId: this._id,
+		songId: newSongId
 	});
+	console.log("THIS IS THE SONG ID " + newSongId)
+	Favorites.find({userId: this._id, songId: newSongId}, function(err, favorite){
+		if(favorite && favorite.length === 0) {
+			newFavorite.save(function(err, succ){
+				if(err){
+					console.log("cannot save favorite to databse");
+					console.log(err);
+				}
+				if(succ){
+					console.log("favorite stored to database");
+					console.log(succ);
+					callback(err, favorite);
+				}
+			})
+		}
+		if(err){
+			console.log("error finding favorite");
+			console.log(err);
+		}
+	})
+}
+
 
 UserSchema.plugin(findOrCreate);
 // Create all of your models/schemas here, as properties.
 var models = {
-	Contact: mongoose.model('Contact', {
-		email: {
-			type: String,
-			required: true
-		},
-		phone: {
-			type: String,
-			required: true
-		},
-		owner: {
-			type: String,
-			required: true
-		}
-	}),
-
-	User: mongoose.model('User', UserSchema)
+	Song: mongoose.model('Song', SongSchema),
+	User: mongoose.model('User', UserSchema),
+	Favorites: mongoose.model('Favorites', FavoritesSchema)
 };
 
 module.exports = models;
