@@ -6,6 +6,7 @@
 <div id = "output">
 </div>
 <button id='interval'>click</button>
+<button id='user'>update User</button>
 </div>
 
 <script>
@@ -32,6 +33,26 @@
 	$("#interval").click(function(){
 		$.ajax({
 			url: '/fetchData', 
+			method: "GET",
+			success: function(data){
+				// console.log("SUCCESSFUL" + data);
+				// console.log(data);
+				$('#output').html(data);
+				// res.send(data);
+				// res.redirect('/login');
+
+				// use .html to funnel in new likes here
+			},
+			error: function(err){
+				console.log("NOT SUCCESSFUL" + err)
+				// res.redirect('/login');
+			}
+		})
+	})
+
+	$("#user").click(function(){
+		$.ajax({
+			url: '/userScore', 
 			method: "GET",
 			success: function(data){
 				// console.log("SUCCESSFUL" + data);

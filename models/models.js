@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var findOrCreate = require('mongoose-findorcreate');
+var SC = require('node-soundcloud');
 
 // Create a connect.js inside the models/ directory that
 // exports your MongoDB URI!
@@ -19,6 +20,12 @@ var UserSchema = new mongoose.Schema({
 		type: String
 	},
 	scToken: {
+		type: String
+	},
+	score: {
+		type: Number
+	},
+	img: {
 		type: String
 	}
 });
@@ -78,45 +85,69 @@ UserSchema.methods.assignFavorites = function(newSongId, callback){
 	})
 }
 
-// FavoritesSchema.methods.addSongs = function(user, songId, callback){
-// 	Song.find({songId: songId}, function(err, song){
-// 		if(err){
-// 			console.log("cannot look up song by id");
-// 			console.log(err);
-// 		}
-		
-// 		if(song && song.length === 0){
-// 			newSong.save(function(error,success){
-// 				if (error){
-// 					console.log("cannot save song to database");
-// 					console.log(error);
-// 				}
-// 				if (success){
-// 					console.log(success);
-// 					console.log("SAVED Song");
-// 					user.assignFavorites(success._id, function(err, success){
-// 						if (success){
-// 							console.log(success);
-// 							// res.send("HELLO");
-// 							// res.redirect('/fetchData');
-// 						}
-// 					});
-// 					callback(err, song);
-// 					console.log("SAVED FAV");
-// 				}
-// 			})
-// 		}
-// 		else {
-// 			callback(err, song);
-// 		};
-		// else{
-		// 	res.render('update',{
-		// 		data: favorites,
-		// 		layout: false
-		// 	})
-		// }
-	// })
-// }
+UserSchema.methods.getScore = function(callback){
+	var totalPercentage = 0;
+	var denominator = 0;
+
+	var that = this;
+
+	Favorites.find({userId: this._id}).populate('songId').exec(function(err, favorites){
+
+
+		if(favorites && favorites.length > 0){
+
+			var length = favorites.length;
+			console.log("testing!!!", length);
+			var cb = function(){
+				length --;
+				if (length === 0){
+					console.log("YOU GOT IN!! LENGTH IS : " + length);
+					console.log("COMPLETED USER SCORING, SCORE IS " + (totalPercentage/denominator));
+					that.score = totalPercentage/denominator;
+					that.save(function(err, succ){
+						if(err){
+							console.log(err);
+						}
+						if(succ){
+							console.log(succ);
+							callback(succ);
+						}
+					})
+				}
+			};
+
+			favorites.forEach(function(favorite){
+				var initialLikes = favorite.songId.initialLikes;
+				var currentlikes;
+				SC.init({
+				  id: 'bfd03479aef078b87807af6b0d9787ee',
+				  secret: '93229d86384dc973be18ad7b4fec3ca0',
+				  uri: 'http://localhost:3000/auth/soundcloud/callback',
+				  accessToken: that.scToken
+				});
+
+				var trackId = favorite.songId;
+				// var url = '/tracks/' + encodeURIComponent(trackId);
+				var url = '/tracks/' + trackId.songId;
+				console.log(url);
+				SC.get(url, function(err, track) {
+					if(track){
+						currentlikes = track.favoritings_count;
+						var songScore = (currentlikes - initialLikes)/initialLikes;
+						totalPercentage += songScore;
+						denominator ++;
+						console.log("total percent is: " + totalPercentage);
+						console.log("denom is : " + denominator);
+						cb();
+					}
+					if (err){
+						console.log(err);
+					}
+				})
+			})
+		}
+	})
+}
 
 UserSchema.plugin(findOrCreate);
 // Create all of your models/schemas here, as properties.
