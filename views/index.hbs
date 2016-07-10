@@ -44,7 +44,7 @@
 				// use .html to funnel in new likes here
 			},
 			error: function(err){
-				console.log("NOT SUCCESSFUL" + err)
+				console.log("NOT SUCCESSFUL", err)
 				// res.redirect('/login');
 			}
 		})
@@ -55,6 +55,8 @@
 			url: '/userScore', 
 			method: "GET",
 			success: function(data){
+				
+				// console.log(data);
 				// console.log("SUCCESSFUL" + data);
 				// console.log(data);
 				$('#output').html(data);
@@ -64,7 +66,7 @@
 				// use .html to funnel in new likes here
 			},
 			error: function(err){
-				console.log("NOT SUCCESSFUL" + err)
+				console.log("NOT SUCCESSFUL", err)
 				// res.redirect('/login');
 			}
 		})

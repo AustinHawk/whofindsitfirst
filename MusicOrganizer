@@ -15,8 +15,8 @@ var MusicOrganizer = function(songs) {
 
 MusicOrganizer.prototype.getOrderedSongs = function() {
 
-	for (var i = 0; i < songs.length; i++) {
-		var currentSong = songs[i];
+	for (var i = 0; i < this.allSongs.length; i++) {
+		var currentSong = this.allSongs[i];
 		var currentSongInitialLikes = currentSong.initialLikes;
 		var currentSongCurrentLikes = currentSong.currentLikes;
 		var songName = currentSong.songName;
