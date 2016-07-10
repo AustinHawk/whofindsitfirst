@@ -91,9 +91,11 @@ passport.use(new SoundCloudStrategy({
   callbackURL: "http://localhost:3000/auth/soundcloud/callback"
 },
 function(accessToken, refreshToken, profile, done) {
+  console.log("USER PROFILE LOOKS LIKE THIS: ", profile);
   User.findOrCreate({ soundcloudId: profile.id }, {
     soundcloudId: profile.id,
-    scToken: accessToken
+    scToken: accessToken,
+    img: profile.avatar_url
   }, function(err, user){
     if(err){
       console.log(err);
