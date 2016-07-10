@@ -96,7 +96,8 @@ function(accessToken, refreshToken, profile, done) {
   User.findOrCreate({ soundcloudId: profile.id }, {
     soundcloudId: profile.id,
     scToken: accessToken,
-    img: profile._json.avatar_url
+    img: profile._json.avatar_url,
+    // name: displayName
   }, function(err, user){
     if(err){
       console.log(err);

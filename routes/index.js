@@ -21,30 +21,60 @@ router.use(function(req, res, next){
 
 
 router.get('/index', function(req,res,next){
-	console.log(req.user.id);
+	// console.log(req.user.id);
+	console.log("got to index");
 	res.render('index');
 })
 
 router.get('/userScore', function(req, res, next){
 	User.find(function(e, user){
-		if(user){
-			var arr = [];
-			user.forEach(function(singleUser, i){
-				singleUser.getScore(function(succ){
-					arr.push(succ);
-					console.log("ARRAY IS : "+arr);
-					if((i+1) === user.length){
-						res.render('user', {
-							input: arr
-						});
-					}
-				});
-			});
-		}
+		// console.log("Got user data:", user);
 		if(e){
 			res.send(e);
 			return;
 		}
+		console.log("total users:", user.length)
+		if(user){
+			var arr = [];
+			user.forEach(function(singleUser, i){
+				// singleUser.getScore(function(succ){
+				// 	console.log("Called getScore for user", i);
+				// 	// console.log("User:", singleUser, ", score:", succ);
+				// 	console.log("i:", i);
+				// 	arr.push(succ);
+				// 	if(arr.length === user.length){
+				// 		console.log("ARRAY IS : "+arr);
+				// 		res.render('user', {
+				// 			input: arr
+				// 		});
+				// 	}
+				// });
+
+				// console.log("user: ", singleUser);
+				console.log("user ", i, " has 'getScore' function: ", singleUser.getScore !== undefined);
+
+				singleUser.getScore(function(err, score){
+					// console.log("Called getScore for user", i);
+					// console.log("User:", singleUser, ", score:", score);
+					console.log("User:", i, ", score:", score.score);
+					// console.log("i:", i);
+					arr.push(score);
+					if(i + 1 === user.length){
+						// console.log("ARRAY IS : " + arr);
+						console.log("Exiting /userScore");
+						return res.render('user', {
+							input: arr
+						});
+						// return res.json({
+						// 	score: arr
+						// })
+					}
+				});
+			});
+		} else {
+			return res.render('user');
+		}
+		
 	})
 
 });
@@ -56,6 +86,10 @@ router.get('/fetchData', function(req,res,next){
 	var scId;
 	var fav;
 	User.findById(id, function(e, user){
+
+		if(e){
+			console.log(e);
+		}
 		if(user){
 			SC.init({
 			  id: 'bfd03479aef078b87807af6b0d9787ee',
@@ -127,9 +161,6 @@ router.get('/fetchData', function(req,res,next){
 			// res.json(newData);
 			})
 		};
-		if(e){
-			console.log(e);
-		}
 	})
 	// res.send(fav);
 

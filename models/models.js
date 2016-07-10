@@ -56,6 +56,36 @@ var FavoritesSchema = new mongoose.Schema({
 	}
 });
 
+FavoritesSchema.methods.getDifference = function(accessToken, callback) {
+	var initialLikes = this.songId.initialLikes
+	var currentlikes;
+	SC.init({
+	  id: 'bfd03479aef078b87807af6b0d9787ee',
+	  secret: '93229d86384dc973be18ad7b4fec3ca0',
+	  uri: 'http://localhost:3000/auth/soundcloud/callback',
+	  accessToken: accessToken
+	});
+
+	// var trackId = this.songId;
+	// var url = '/tracks/' + encodeURIComponent(trackId);
+	var url = '/tracks/' + this.songId.songId;
+	// console.log(url);
+	SC.get(url, function(err, track) {
+		if (err){
+			return console.log(err);
+		}
+		if(track){
+
+			currentlikes = track.favoritings_count;
+			var songScore = (currentlikes - initialLikes)/initialLikes;
+			// console.log(songScore);
+			// console.log("total percent is: " + totalPercentage);
+			// console.log("denom is : " + denominator);
+			callback(null, songScore)
+		}
+	})
+}
+
 var Favorites = mongoose.model('Favorites', FavoritesSchema);
 
 UserSchema.methods.assignFavorites = function(newSongId, callback){
@@ -87,66 +117,106 @@ UserSchema.methods.assignFavorites = function(newSongId, callback){
 
 UserSchema.methods.getScore = function(callback){
 	var totalPercentage = 0;
-	var denominator = 0;
+	// var denominator = 0;
 
 	var that = this;
 
-	Favorites.find({userId: this._id}).populate('songId').exec(function(err, favorites){
+	// get all a user's "favorites"
+	Favorites
+		.find({userId: this._id})
+		.populate('songId')
+		.exec(function(err, favorites) {
+			if (err) {
+				console.log(error)
+				return callback(err);
+			}
+			var favLength = favorites.length;
+			console.log("where the fuck is this shit", favLength);
+			if (favLength === 0) {
+				return callback(null, 0);
+			}
 
+			// iterate through favorites to calculate "score"
+			favorites.forEach(function(fav, i) {
+				// for every favorite, get percentage difference since first check
+				fav.getDifference(that.scToken, function(err, perDiff) {
+					// add total percentages
+					totalPercentage += perDiff;
 
-		if(favorites && favorites.length > 0){
-
-			var length = favorites.length;
-			console.log("testing!!!", length);
-			var cb = function(){
-				length --;
-				if (length === 0){
-					console.log("YOU GOT IN!! LENGTH IS : " + length);
-					console.log("COMPLETED USER SCORING, SCORE IS " + (totalPercentage/denominator));
-					that.score = totalPercentage/denominator;
-					that.save(function(err, succ){
-						if(err){
-							console.log(err);
-						}
-						if(succ){
-							console.log(succ);
-							callback(succ);
-						}
-					})
-				}
-			};
-
-			favorites.forEach(function(favorite){
-				var initialLikes = favorite.songId.initialLikes;
-				var currentlikes;
-				SC.init({
-				  id: 'bfd03479aef078b87807af6b0d9787ee',
-				  secret: '93229d86384dc973be18ad7b4fec3ca0',
-				  uri: 'http://localhost:3000/auth/soundcloud/callback',
-				  accessToken: that.scToken
-				});
-
-				var trackId = favorite.songId;
-				// var url = '/tracks/' + encodeURIComponent(trackId);
-				var url = '/tracks/' + trackId.songId;
-				console.log(url);
-				SC.get(url, function(err, track) {
-					if(track){
-						currentlikes = track.favoritings_count;
-						var songScore = (currentlikes - initialLikes)/initialLikes;
-						totalPercentage += songScore;
-						denominator ++;
-						console.log("total percent is: " + totalPercentage);
-						console.log("denom is : " + denominator);
-						cb();
+					// return callback in here on the last iteration bc async shit
+					if (i + 1 === favLength) {
+						that.score = totalPercentage / favLength;
+						console.log(that.score);
+						that.save(function(err, user) {
+							return callback(null, user);
+						})
 					}
-					if (err){
-						console.log(err);
-					}
+
 				})
 			})
-		}
+		// return callback(null, that)
 	})
+
+	// Favorites.find({userId: this._id}).populate('songId').exec(function(err, favorites){
+	// 	// console.log("favorites before the conditional", favorites);
+
+	// 	if(favorites && favorites.length > 0){
+	// 		// console.log("this is favorites!!", favorites);
+	// 		// console.log("Favorites.length", favorites.length);
+	// 		var length = favorites.length;
+	// 		// console.log("testing!!!", length);
+	// 		var cb = function(){
+	// 			length --;
+	// 			if (length === 0){
+	// 				// console.log("YOU GOT IN!! LENGTH IS : " + length);
+	// 				// console.log("COMPLETED USER SCORING, SCORE IS " + (totalPercentage/denominator));
+	// 				that.score = totalPercentage/denominator;
+	// 				that.save(function(err, succ){
+	// 					if(err){
+	// 						console.log(err);
+	// 						console.error("ERROR!!!!!", err);
+	// 					}
+	// 					if(succ){
+	// 						// console.log(succ);
+	// 						callback(succ);
+	// 					}
+	// 					if (!err && !succ) {
+	// 						console.error("GOT NEITHER!!!");
+	// 					}
+	// 				})
+	// 			}
+	// 		};
+
+	// 		favorites.forEach(function(favorite){
+		// var currentlikes;
+		// 		SC.init({
+		// 		  id: 'bfd03479aef078b87807af6b0d9787ee',
+		// 		  secret: '93229d86384dc973be18ad7b4fec3ca0',
+		// 		  uri: 'http://localhost:3000/auth/soundcloud/callback',
+		// 		  accessToken: that.scToken
+		// 		});
+
+		// 		var trackId = favorite.songId;
+		// 		// var url = '/tracks/' + encodeURIComponent(trackId);
+		// 		var url = '/tracks/' + trackId.songId;
+		// 		// console.log(url);
+		// 		SC.get(url, function(err, track) {
+		// 			if(track){
+		// 				currentlikes = track.favoritings_count;
+		// 				var songScore = (currentlikes - initialLikes)/initialLikes;
+		// 				totalPercentage += songScore;
+		// 				denominator ++;
+		// 				// console.log("total percent is: " + totalPercentage);
+		// 				// console.log("denom is : " + denominator);
+		// 				cb();
+		// 			}
+		// 			if (err){
+		// 				console.log(err);
+		// 			}
+		// 		})
+	// 		})
+	// 	}
+	// })
 }
 
 UserSchema.plugin(findOrCreate);
