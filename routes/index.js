@@ -25,6 +25,29 @@ router.get('/index', function(req,res,next){
 	res.render('index');
 })
 
+router.get('/userScore', function(req, res, next){
+	User.find(function(e, user){
+		if(user){
+			var arr = [];
+			user.forEach(function(singleUser, i){
+				singleUser.getScore(function(succ){
+					arr.push(succ);
+					console.log("ARRAY IS : "+arr);
+					if((i+1) === user.length){
+						res.render('user', {
+							input: arr
+						});
+					}
+				});
+			});
+		}
+		if(e){
+			res.send(e);
+			return;
+		}
+	})
+
+});
 
 router.get('/fetchData', function(req,res,next){
 	// console.log(req.user.id);
