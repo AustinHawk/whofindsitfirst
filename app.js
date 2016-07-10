@@ -30,8 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Passport stuff here
 // express-session: sets req.cookies on all requests sent to your website
-var session = require('express-session');
-app.use(session({ secret: 'keyboard cat' }));
+var session = require('cookie-session');
+app.use(session({ keys: ['keyboard cat'] }));
 
 // Tell Passport how to set req.user
 // how express attaches req.user (to current user)
@@ -78,8 +78,6 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, {
-      email: " ",
-      password: " ",
       facebookId: profile.id,
     }, function (err, user) {
       return cb(err, user);
@@ -94,9 +92,8 @@ passport.use(new SoundCloudStrategy({
 },
 function(accessToken, refreshToken, profile, done) {
   User.findOrCreate({ soundcloudId: profile.id }, {
-    email:" ",
-    password:" ",
     soundcloudId: profile.id,
+    scToken: accessToken
   }, function(err, user){
     if(err){
       console.log(err);

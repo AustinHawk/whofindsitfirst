@@ -93,6 +93,7 @@ module.exports = function(passport) {
 
 	router.get('/logout', function(req, res, next){
 		req.logout();
+		res.redirect('/login');
 	}); 
 
     return router;
