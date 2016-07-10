@@ -78,6 +78,45 @@ UserSchema.methods.assignFavorites = function(newSongId, callback){
 	})
 }
 
+// FavoritesSchema.methods.addSongs = function(user, songId, callback){
+// 	Song.find({songId: songId}, function(err, song){
+// 		if(err){
+// 			console.log("cannot look up song by id");
+// 			console.log(err);
+// 		}
+		
+// 		if(song && song.length === 0){
+// 			newSong.save(function(error,success){
+// 				if (error){
+// 					console.log("cannot save song to database");
+// 					console.log(error);
+// 				}
+// 				if (success){
+// 					console.log(success);
+// 					console.log("SAVED Song");
+// 					user.assignFavorites(success._id, function(err, success){
+// 						if (success){
+// 							console.log(success);
+// 							// res.send("HELLO");
+// 							// res.redirect('/fetchData');
+// 						}
+// 					});
+// 					callback(err, song);
+// 					console.log("SAVED FAV");
+// 				}
+// 			})
+// 		}
+// 		else {
+// 			callback(err, song);
+// 		};
+		// else{
+		// 	res.render('update',{
+		// 		data: favorites,
+		// 		layout: false
+		// 	})
+		// }
+	// })
+// }
 
 UserSchema.plugin(findOrCreate);
 // Create all of your models/schemas here, as properties.

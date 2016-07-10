@@ -5,7 +5,7 @@
 <h3> HOME PAGE </h3>
 <div id = "output">
 </div>
-<button id='interval'>ckuc</button>
+<button id='interval'>click</button>
 </div>
 
 <script>
@@ -34,8 +34,8 @@
 			url: '/fetchData', 
 			method: "GET",
 			success: function(data){
-				console.log("SUCCESSFUL" + data);
-				console.log(data);
+				// console.log("SUCCESSFUL" + data);
+				// console.log(data);
 				$('#output').html(data);
 				// res.send(data);
 				// res.redirect('/login');
