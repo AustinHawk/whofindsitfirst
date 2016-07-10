@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 50px !important;
   /*font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;*/
 	font-family: "Helvetica Neue";
 	font-weight: 300;

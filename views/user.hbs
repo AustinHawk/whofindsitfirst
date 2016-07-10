@@ -1,12 +1,12 @@
 <div> 
-	{{#each input}}
+{{!-- 	{{#each input}}
 	<ul>
 		<li>
 			<p>ID: {{id}}</p>
 			<p>SCORE: {{score}}</p>
 		</li>
 	</ul>
-	{{/each}}
+	{{/each}} --}}
 
 
 	<div class="container">
@@ -17,14 +17,59 @@
 
 		<div class="wrapper">
 		{{#each input}}
-			<div class="square">
-				<div class="content bg" style ="background-image: url({{img}})">
-					<div class="table">
-						<div class="table-cell"><span class="backed"> HELLO WORLD </span></div>
+			<div class="parent square" id={{id}}>
+				<div class="display" num={{id}} >
+					<div class="content bg" id="display{{id}}" style ="background-image: url({{img}}); display: block">
+						<div class="table">
+							<div class="table-cell"><span class="backed"> {{userName}}: {{score}} </span></div>
+						</div>
 					</div>
+				</div>
+				<div class = "bestsquare" style="display: none">
+					<iframe width="100%" height="205px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/{{soundcloudId}}&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=true&amp;show_reposts=true&amp;visual=true&amp;buying=false&amp;download=false&amp;font=helvetica"></iframe>
+            		<button class="followButton" id="follow" value="{{soundcloudId}}">FOLLOW</button>
 				</div>
 			</div>
 		{{/each}}
 		</div>
 	</div>
 </div>
+
+
+<script>
+	$('.parent').hover(function(e){
+		console.log("HOVERING");
+		$(this).children('.display').hide();	
+		$(this).children('.bestsquare').show();
+	// var id = e.target.num;
+	// console.log("THIS IS THE ID", id);
+	// $('#display'+id).hide();
+	// $('#hover'+id).show();
+	// console.log("SHOWING");
+}, 		function(e){
+			$(this).children('.bestsquare').hide();	
+			$(this).children('.display').show();
+		}
+	)
+
+	$("#follow").click(function(e){
+		var scId = e.target.value;
+		$.ajax({
+			url: '/follow/'+scId, 
+			method: "GET",
+			success: function(data){
+				// console.log("SUCCESSFUL" + data);
+				// console.log(data);
+				$('#output').html(data);
+				// res.send(data);
+				// res.redirect('/login');
+
+				// use .html to funnel in new likes here
+			},
+			error: function(err){
+				console.log("NOT SUCCESSFUL" + err)
+				// res.redirect('/login');
+			}
+		})
+	})
+</script>

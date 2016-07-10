@@ -27,6 +27,9 @@ var UserSchema = new mongoose.Schema({
 	},
 	img: {
 		type: String
+	},
+	userName: {
+		type: String
 	}
 });
 
@@ -78,6 +81,10 @@ UserSchema.methods.assignFavorites = function(newSongId, callback){
 				}
 			})
 		}
+		else{
+			// put in callback (this way length will go to 0 in prev function)
+			callback(err, favorite);
+		}
 		if(err){
 			console.log("error finding favorite");
 			console.log(err);
@@ -88,20 +95,17 @@ UserSchema.methods.assignFavorites = function(newSongId, callback){
 UserSchema.methods.getScore = function(callback){
 	var totalPercentage = 0;
 	var denominator = 0;
-
 	var that = this;
-
-	Favorites.find({userId: this._id}).populate('songId').exec(function(err, favorites){
-
-
+	console.log("THIS IS THE USER WOOOOO", this);
+	Favorites.find({userId: this._id})
+	.populate('songId')
+	.exec(function(err, favorites){
+		console.log("ERR IS : ", err, "FAVES IS", favorites)
 		if(favorites && favorites.length > 0){
-
 			var length = favorites.length;
-			console.log("testing!!!", length);
 			var cb = function(){
 				length --;
 				if (length === 0){
-					console.log("YOU GOT IN!! LENGTH IS : " + length);
 					console.log("COMPLETED USER SCORING, SCORE IS " + (totalPercentage/denominator));
 					that.score = totalPercentage/denominator;
 					that.save(function(err, succ){
@@ -127,9 +131,7 @@ UserSchema.methods.getScore = function(callback){
 				});
 
 				var trackId = favorite.songId;
-				// var url = '/tracks/' + encodeURIComponent(trackId);
 				var url = '/tracks/' + trackId.songId;
-				console.log(url);
 				SC.get(url, function(err, track) {
 					if(track){
 						currentlikes = track.favoritings_count;
