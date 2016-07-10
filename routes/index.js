@@ -45,16 +45,36 @@ router.get('/fetchData', function(req,res,next){
 			SC.get('/users/'+scId+'/favorites', function(err, favorites) {
 				if(err){
 					res.send(err);
+					console.log("GOT AN ERROR !!!");
+					return;
 				}
 				if(favorites){
 					console.log(favorites);
+					var len = favorites.length;
+
+					var cb = function(){
+						len --;
+						if(!len){
+							res.render('update', {
+								data: favorites,
+								layout: false
+							})
+						}
+					};
+
 					favorites.forEach(function(favorite){
 						var newSong = new Song({
 							songId: favorite.id,
 							initialLikes: favorite.favoritings_count
 						});
 
-						console.log("this is the favorite id " + favorite.id);
+						// console.log("this is the favorite id " + favorite.id);
+						// favorite.addSongs(user, favorite.id, function(err, succ){
+						// 	console.log("ADDING SONG");
+						// })
+
+					
+
 						Song.find({songId: favorite.id}, function(err, song){
 							if(song && song.length === 0){
 								newSong.save(function(error,success){
@@ -65,22 +85,14 @@ router.get('/fetchData', function(req,res,next){
 									if (success){
 										console.log(success);
 										console.log("SAVED Song");
-										user.assignFavorites(success._id, function(err, success){
-											if (success){
-												console.log(success);
-												// res.send("HELLO");
-												res.redirect('/fetchData');
-											}
-										});
+										user.assignFavorites(success._id, cb);
 										console.log("SAVED FAV");
 									}
 								})
 							}
 							else{
-								res.render('update',{
-									data: favorites,
-									layout: false
-								})
+								cb();
+								return;
 							}
 							if(err){
 								console.log("cannot look up song by id");
@@ -102,7 +114,7 @@ router.get('/fetchData', function(req,res,next){
 
 
 	
-})
+});
 
 
 
