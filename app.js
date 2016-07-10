@@ -74,7 +74,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new FacebookStrategy({
     clientID: "605028946343058",
     clientSecret: "48efa4bacb1c8986541253a1d9e80c7a",
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
+    callbackURL: "http://whofindsitfirst.herokuapp.com//auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, {
@@ -88,7 +88,7 @@ passport.use(new FacebookStrategy({
 passport.use(new SoundCloudStrategy({
   clientID: "bfd03479aef078b87807af6b0d9787ee",
   clientSecret: "93229d86384dc973be18ad7b4fec3ca0",
-  callbackURL: "http://localhost:3000/auth/soundcloud/callback"
+  callbackURL: "http://whofindsitfirst.herokuapp.com/auth/soundcloud/callback"
 },
 function(accessToken, refreshToken, profile, done) {
   console.log("USER PROFILE LOOKS LIKE THIS: ", profile);
